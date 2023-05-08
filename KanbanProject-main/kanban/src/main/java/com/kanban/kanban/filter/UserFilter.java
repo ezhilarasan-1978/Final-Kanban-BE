@@ -26,7 +26,7 @@ public class UserFilter extends GenericFilterBean {
 
             Claims claims = Jwts.parser().setSigningKey("PROJECTEzhilMahekPriyanshu").parseClaimsJws(token).getBody();
             System.out.println("Retrieved Claims :" + claims);
-            httpServletRequest.setAttribute("attr1", claims.get("UserEmail"));
+            httpServletRequest.setAttribute("attr1", claims.get("userName"));
         }
 
         filterChain.doFilter(httpServletRequest, httpServletResponse);
