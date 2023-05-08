@@ -7,8 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
-@RequestMapping("api/v1/user")
+@RequestMapping("/api/v1/user")
 public class UserController {
     @Autowired
     IUserService userService;
@@ -18,16 +20,20 @@ public class UserController {
     public ResponseEntity<?> register(@RequestBody User user){
         return new ResponseEntity<>(userService.registerUser(user), HttpStatus.CREATED);
     }
-    @GetMapping("/{username}")
-    public ResponseEntity<?> userDetails(@PathVariable String username){
+    @GetMapping("/details")
+    public ResponseEntity<?> userDetails(HttpServletRequest httpServletRequest){
+        String username= (String) httpServletRequest.getAttribute("attr1");
+        System.out.println(username);
         return new ResponseEntity<>(userService.userDetails(username), HttpStatus.OK);
     }
-    @GetMapping("/addProject/{username}/{projectName}")
-    public ResponseEntity<?> addProject(@PathVariable String projectName,@PathVariable String username){
+    @GetMapping("/addProject/{projectName}")
+    public ResponseEntity<?> addProject(@PathVariable String projectName,HttpServletRequest httpServletRequest){
+        String username= (String) httpServletRequest.getAttribute("attr1");
         return new ResponseEntity<>(userService.addProjectList(username,projectName), HttpStatus.OK);
     }
-    @GetMapping("/removeProject/{username}/{projectName}")
-    public ResponseEntity<?> removeProject(@PathVariable String projectName,@PathVariable String username){
+    @GetMapping("/removeProject/{projectName}")
+    public ResponseEntity<?> removeProject(@PathVariable String projectName,HttpServletRequest httpServletRequest){
+        String username= (String) httpServletRequest.getAttribute("attr1");
         return new ResponseEntity<>(userService.removeProjectList(username,projectName), HttpStatus.OK);
     }
 }
