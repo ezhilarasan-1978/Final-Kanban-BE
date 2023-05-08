@@ -31,6 +31,10 @@ public class UserController {
         String username= (String) httpServletRequest.getAttribute("attr1");
         return new ResponseEntity<>(userService.addProjectList(username,projectName), HttpStatus.OK);
     }
+    @GetMapping("/updateProject/{username}/{projectName}")
+    public ResponseEntity<?> addProject(@PathVariable String projectName,@PathVariable String username){
+        return new ResponseEntity<>(userService.addProjectList(username,projectName), HttpStatus.OK);
+    }
     @GetMapping("/removeProject/{projectName}")
     public ResponseEntity<?> removeProject(@PathVariable String projectName,HttpServletRequest httpServletRequest){
         String username= (String) httpServletRequest.getAttribute("attr1");
