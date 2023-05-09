@@ -5,5 +5,6 @@ import com.example.FinalProject.Domain.Employee;
 public interface IEmployeeServices {
     Employee addEmployee(Employee employee);
     Employee getEmployee(Employee employee);
+    Boolean getEmployeeByName(String name);
 
 }

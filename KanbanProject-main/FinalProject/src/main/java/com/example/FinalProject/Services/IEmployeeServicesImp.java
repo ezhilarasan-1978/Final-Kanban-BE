@@ -22,4 +22,13 @@ public class IEmployeeServicesImp implements IEmployeeServices{
     public Employee getEmployee(Employee employee) {
         return employeeRepository.findByUserNameAndPassword(employee.getUserName(), employee.getPassword());
     }
+
+    @Override
+    public Boolean getEmployeeByName(String name) {
+        if(employeeRepository.findById(name).isEmpty()){
+            return false;
+        }else{
+            return true;
+        }
+    }
 }
