@@ -41,8 +41,9 @@ public class UserController {
         return new ResponseEntity<>(userService.removeProjectList(username,projectName), HttpStatus.OK);
     }
 
-    @GetMapping("/projectList/{name}")
-    public ResponseEntity<?> getProjectList(@PathVariable String name){
-        return new ResponseEntity<>(userService.getProjectList(name),HttpStatus.OK);
+    @GetMapping("/projectList")
+    public ResponseEntity<?> getProjectList(HttpServletRequest httpServletRequest){
+        String username= (String) httpServletRequest.getAttribute("attr1");
+        return new ResponseEntity<>(userService.getProjectList(username),HttpStatus.OK);
     }
 }
