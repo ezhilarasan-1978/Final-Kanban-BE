@@ -49,4 +49,9 @@ public class UserService implements IUserService{
         userRepository.save(user);
         return true;
     }
+
+    @Override
+    public List<String> getProjectList(String userName) {
+        return userRepository.findById(userName).get().getProjectList();
+    }
 }

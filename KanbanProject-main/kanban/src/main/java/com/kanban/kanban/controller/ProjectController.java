@@ -33,4 +33,5 @@ public class ProjectController {
     public ResponseEntity<?> deleteProject(@PathVariable String name){
         return new ResponseEntity<>(projectService.deleteProject(name),HttpStatus.OK);
     }
+
 }
