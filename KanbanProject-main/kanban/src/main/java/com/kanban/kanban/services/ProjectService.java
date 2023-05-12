@@ -38,4 +38,18 @@ public class ProjectService implements IProjectService{
 
         return true;
     }
+
+    @Override
+    public Project addNewTask(String name, Task task) {
+//        Project project= getProject(name);
+          Project project = projectRepository.findById(name).get();
+          boolean flag=project.getColumns().get("To Be Done")
+                  .stream().anyMatch(t->t.getName().equals(task.getName()));
+        if(flag){
+            throw new IllegalArgumentException("Task with the same name already exists");
+        }
+        project.getColumns().get("To Be Done").add(task);
+
+        return projectRepository.save(project);
+    }
 }
