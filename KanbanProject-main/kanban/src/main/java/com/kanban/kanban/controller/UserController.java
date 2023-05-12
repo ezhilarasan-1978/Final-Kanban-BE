@@ -40,7 +40,6 @@ public class UserController {
         String username= (String) httpServletRequest.getAttribute("attr1");
         return new ResponseEntity<>(userService.removeProjectList(username,projectName), HttpStatus.OK);
     }
-
     @GetMapping("/projectList")
     public ResponseEntity<?> getProjectList(HttpServletRequest httpServletRequest){
         String username= (String) httpServletRequest.getAttribute("attr1");

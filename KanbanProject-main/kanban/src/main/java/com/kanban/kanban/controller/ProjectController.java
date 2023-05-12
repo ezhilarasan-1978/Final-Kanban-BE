@@ -33,5 +33,8 @@ public class ProjectController {
     public ResponseEntity<?> deleteProject(@PathVariable String name){
         return new ResponseEntity<>(projectService.deleteProject(name),HttpStatus.OK);
     }
-
+    @PutMapping("/task/{name}")
+    public ResponseEntity<?> addnewTask(@PathVariable String name, @RequestBody Task task){
+        return new ResponseEntity<>(projectService.addNewTask(name, task), HttpStatus.OK);
+    }
 }

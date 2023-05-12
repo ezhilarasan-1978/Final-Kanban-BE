@@ -11,4 +11,6 @@ public interface IProjectService {
     Project getProject(String name);
     boolean deleteProject(String name);
     boolean saveChanges(String name,Map<String, List<Task>> columns);
+
+    Project addNewTask(String name, Task task);
 }

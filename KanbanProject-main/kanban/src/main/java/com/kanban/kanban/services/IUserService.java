@@ -1,5 +1,6 @@
 package com.kanban.kanban.services;
 
+import com.kanban.kanban.domain.Task;
 import com.kanban.kanban.domain.User;
 
 import java.util.List;
