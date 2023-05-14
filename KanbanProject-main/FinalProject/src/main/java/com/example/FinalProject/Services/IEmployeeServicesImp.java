@@ -1,34 +1,46 @@
 package com.example.FinalProject.Services;
 
 import com.example.FinalProject.Domain.Employee;
+import com.example.FinalProject.Exception.EmployeeAlreadyExistException;
+import com.example.FinalProject.Exception.EmployeeNotFoundException;
 import com.example.FinalProject.Repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class IEmployeeServicesImp implements IEmployeeServices{
+public class IEmployeeServicesImp implements IEmployeeServices {
 
     @Autowired
-   private EmployeeRepository employeeRepository;
-
+    private EmployeeRepository employeeRepository;
 
     @Override
-    public Employee addEmployee(Employee employee) {
-        return employeeRepository.save(employee);
+    public Employee addEmployee(Employee employee) throws EmployeeAlreadyExistException {
+        if (employeeRepository.findById(employee.getUserName()).isEmpty()) {
+            return employeeRepository.save(employee);
+        }
+        else{
+            throw new EmployeeAlreadyExistException();
+
+        }
     }
 
     @Override
-    public Employee getEmployee(Employee employee) {
-        return employeeRepository.findByUserNameAndPassword(employee.getUserName(), employee.getPassword());
+    public Employee getEmployee(Employee employee) throws EmployeeNotFoundException {
+        {
+            if (employeeRepository.findById(employee.getUserName()).isEmpty()) {
+                throw new EmployeeNotFoundException();
+            }
+            return employeeRepository.findByUserNameAndPassword(employee.getUserName(), employee.getPassword());
+        }
     }
 
     @Override
-    public Boolean getEmployeeByName(String name) {
-        if(employeeRepository.findById(name).isEmpty()){
+    public boolean getEmployeeByName(String name) {
+        if (employeeRepository.findById(name).isEmpty()) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
+
 }

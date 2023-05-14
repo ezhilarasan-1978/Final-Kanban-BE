@@ -1,6 +1,9 @@
 package com.kanban.kanban.controller;
 
 import com.kanban.kanban.domain.User;
+import com.kanban.kanban.exception.ProjectNotFoundException;
+import com.kanban.kanban.exception.UserAlreadyExistException;
+import com.kanban.kanban.exception.UserNotFoundException;
 import com.kanban.kanban.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,32 +20,38 @@ public class UserController {
 
     // http://localhost:8007/api/v1/user/register
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody User user){
+    public ResponseEntity<?> register(@RequestBody User user) throws UserAlreadyExistException {
         return new ResponseEntity<>(userService.registerUser(user), HttpStatus.CREATED);
+
     }
+
     @GetMapping("/details")
-    public ResponseEntity<?> userDetails(HttpServletRequest httpServletRequest){
-        String username= (String) httpServletRequest.getAttribute("attr1");
+    public ResponseEntity<?> userDetails(HttpServletRequest httpServletRequest) throws UserNotFoundException {
+        String username = (String) httpServletRequest.getAttribute("attr1");
         System.out.println(username);
         return new ResponseEntity<>(userService.userDetails(username), HttpStatus.OK);
     }
+
     @GetMapping("/addProject/{projectName}")
-    public ResponseEntity<?> addProject(@PathVariable String projectName,HttpServletRequest httpServletRequest){
-        String username= (String) httpServletRequest.getAttribute("attr1");
-        return new ResponseEntity<>(userService.addProjectList(username,projectName), HttpStatus.OK);
+    public ResponseEntity<?> addProject(@PathVariable String projectName, HttpServletRequest httpServletRequest) throws UserNotFoundException {
+        String username = (String) httpServletRequest.getAttribute("attr1");
+        return new ResponseEntity<>(userService.addProjectList(username, projectName), HttpStatus.OK);
     }
+
     @GetMapping("/updateProject/{username}/{projectName}")
-    public ResponseEntity<?> addProject(@PathVariable String projectName,@PathVariable String username){
-        return new ResponseEntity<>(userService.addProjectList(username,projectName), HttpStatus.OK);
+    public ResponseEntity<?> addProject(@PathVariable String projectName, @PathVariable String username) throws UserNotFoundException {
+        return new ResponseEntity<>(userService.addProjectList(username, projectName), HttpStatus.OK);
     }
+
     @GetMapping("/removeProject/{projectName}")
-    public ResponseEntity<?> removeProject(@PathVariable String projectName,HttpServletRequest httpServletRequest){
-        String username= (String) httpServletRequest.getAttribute("attr1");
-        return new ResponseEntity<>(userService.removeProjectList(username,projectName), HttpStatus.OK);
+    public ResponseEntity<?> removeProject(@PathVariable String projectName, HttpServletRequest httpServletRequest) throws UserNotFoundException, ProjectNotFoundException {
+        String username = (String) httpServletRequest.getAttribute("attr1");
+        return new ResponseEntity<>(userService.removeProjectList(username, projectName), HttpStatus.OK);
     }
+
     @GetMapping("/projectList")
-    public ResponseEntity<?> getProjectList(HttpServletRequest httpServletRequest){
-        String username= (String) httpServletRequest.getAttribute("attr1");
-        return new ResponseEntity<>(userService.getProjectList(username),HttpStatus.OK);
+    public ResponseEntity<?> getProjectList(HttpServletRequest httpServletRequest) throws UserNotFoundException {
+        String username = (String) httpServletRequest.getAttribute("attr1");
+        return new ResponseEntity<>(userService.getProjectList(username), HttpStatus.OK);
     }
 }

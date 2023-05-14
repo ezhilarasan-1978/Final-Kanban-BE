@@ -2,6 +2,8 @@ package com.kanban.kanban.services;
 
 import com.kanban.kanban.domain.Project;
 import com.kanban.kanban.domain.Task;
+import com.kanban.kanban.exception.DuplicateProjectException;
+import com.kanban.kanban.exception.ProjectNotFoundException;
 import com.kanban.kanban.repository.IProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,27 +17,34 @@ public class ProjectService implements IProjectService{
     IProjectRepository projectRepository;
 
     @Override
-    public Project createProject(Project project) {
-        return projectRepository.insert(project);
+    public Project createProject(Project project) throws DuplicateProjectException {
+        if(projectRepository.findById(project.getName()).isEmpty())
+            return projectRepository.insert(project);
+        throw new DuplicateProjectException();
     }
 
     @Override
-    public Project getProject(String name) {
+    public Project getProject(String name) throws ProjectNotFoundException {
+        if(projectRepository.findById(name).isEmpty())
+            throw new ProjectNotFoundException();
         return projectRepository.findById(name).get();
     }
 
     @Override
-    public boolean deleteProject(String name) {
+    public boolean deleteProject(String name) throws ProjectNotFoundException {
+        if(projectRepository.findById(name).isEmpty())
+            throw new ProjectNotFoundException();
         projectRepository.deleteById(name);
         return true;
     }
 
     @Override
-    public boolean saveChanges(String name,Map<String, List<Task>> columns) {
+    public boolean saveChanges(String name,Map<String, List<Task>> columns) throws ProjectNotFoundException {
+        if(projectRepository.findById(name).isEmpty())
+            throw new ProjectNotFoundException();
         Project project = projectRepository.findById(name).get();
         project.setColumns(columns);
         projectRepository.save(project);
-
         return true;
     }
 
