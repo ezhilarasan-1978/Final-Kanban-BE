@@ -19,4 +19,12 @@ public class NotificationController {
     public ResponseEntity<?> getNotification(@PathVariable String name){
         return new ResponseEntity<>(notificationService.getNotification(name), HttpStatus.OK);
     }
+    @GetMapping("/allRead/{name}")
+    public ResponseEntity<?> markAllAsRead(@PathVariable String name){
+        return new ResponseEntity<>(notificationService.markAllRead(name),HttpStatus.OK);
+    }
+    @GetMapping("/read/{name}/{message}")
+    public ResponseEntity<?> markAsRead(@PathVariable String name,@PathVariable String message){
+        return new ResponseEntity<>(notificationService.markRead(name, message),HttpStatus.OK);
+    }
 }

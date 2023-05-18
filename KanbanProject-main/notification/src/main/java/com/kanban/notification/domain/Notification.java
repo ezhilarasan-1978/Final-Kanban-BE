@@ -7,6 +7,7 @@ import org.json.simple.JSONObject;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.*;
 
 
 @Document
@@ -16,6 +17,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Notification {
     @Id
     private String username;
-    private String notificationMessage;
+    private Map<String,Boolean> notificationMessage;
     private JSONObject jsonObject;
 }
