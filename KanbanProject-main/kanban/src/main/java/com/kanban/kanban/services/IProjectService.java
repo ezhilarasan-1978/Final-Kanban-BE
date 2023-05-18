@@ -15,4 +15,6 @@ public interface IProjectService {
     boolean saveChanges(String name,Map<String, List<Task>> columns) throws ProjectNotFoundException;
 
     Project addNewTask(String name, Task task);
+
+    boolean deleteMemeberFromProject(String projectName, String userName) throws ProjectNotFoundException;
 }

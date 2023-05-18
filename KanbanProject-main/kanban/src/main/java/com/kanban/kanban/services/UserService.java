@@ -6,6 +6,7 @@ import com.kanban.kanban.domain.User;
 import com.kanban.kanban.exception.ProjectNotFoundException;
 import com.kanban.kanban.exception.UserAlreadyExistException;
 import com.kanban.kanban.exception.UserNotFoundException;
+import com.kanban.kanban.proxy.ProjectProxy;
 import com.kanban.kanban.proxy.UserProxy;
 import com.kanban.kanban.repository.IUserRepository;
 import org.json.simple.JSONObject;
@@ -24,6 +25,8 @@ public class UserService implements IUserService {
     private UserProxy userProxy;
     private RabbitTemplate rabbitTemplate;
     private DirectExchange directExchange;
+
+    ProjectProxy projectProxy;
 
     @Autowired
     public UserService(IUserRepository userRepository, UserProxy userProxy, RabbitTemplate rabbitTemplate, DirectExchange directExchange) {
@@ -54,7 +57,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public boolean addProjectList(String userName, String projectName) throws UserNotFoundException {
+    public boolean addProjectList(String userName, String projectName) throws UserNotFoundException, ProjectNotFoundException {
         if (userRepository.findById(userName).isEmpty()) {
             throw new UserNotFoundException();
         } else {
@@ -83,9 +86,11 @@ public class UserService implements IUserService {
         if (!projectList.contains(projectName)) {
             throw new ProjectNotFoundException();
         } else {
+            projectProxy.deleteMemberOfProject(projectName,userName);
             List<String> list = user_.getProjectList();
             list.remove(projectName);
             user_.setProjectList(list);
+
             userRepository.save(user_);
             return true;
         }

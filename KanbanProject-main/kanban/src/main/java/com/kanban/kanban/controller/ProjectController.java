@@ -39,4 +39,9 @@ public class ProjectController {
     public ResponseEntity<?> addnewTask(@PathVariable String name, @RequestBody Task task){
         return new ResponseEntity<>(projectService.addNewTask(name, task), HttpStatus.OK);
     }
+    @GetMapping("/deleteMember/{projectName}/{userName}")
+    public ResponseEntity<?> deleteMemberOfProject(@PathVariable String projectName,@PathVariable String userName) throws ProjectNotFoundException {
+
+        return new ResponseEntity<>(projectService.deleteMemeberFromProject(projectName, userName), HttpStatus.OK);
+    }
 }

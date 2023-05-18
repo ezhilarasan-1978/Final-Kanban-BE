@@ -8,8 +8,10 @@ import com.kanban.kanban.repository.IProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Member;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class ProjectService implements IProjectService{
@@ -50,6 +52,8 @@ public class ProjectService implements IProjectService{
 
     @Override
     public Project addNewTask(String name, Task task) {
+        System.out.println("this is the delete task method ");
+
           Project project = projectRepository.findById(name).get();
           boolean flag=project.getColumns().get("To Be Done")
                   .stream().anyMatch(t->t.getName().equals(task.getName()));
@@ -59,4 +63,26 @@ public class ProjectService implements IProjectService{
         project.getColumns().get("To Be Done").add(task);
         return projectRepository.save(project);
     }
+
+    @Override
+    public boolean deleteMemeberFromProject(String projectName, String userName) throws ProjectNotFoundException {
+        Optional<Project> optionalProject = projectRepository.findById(projectName);
+        if (optionalProject.isPresent()) {
+            Project project = optionalProject.get();
+            List<String> listMembers = project.getMembers();
+            if (listMembers.contains(userName)) {
+                listMembers.removeIf(member -> member.equals(userName));
+                if (listMembers.isEmpty()) {
+                    deleteProject(projectName);
+                } else {
+                    project.setMembers(listMembers);
+                    projectRepository.save(project);
+                }
+                return true;
+            }
+        }
+        throw new ProjectNotFoundException();
+    }
+
+
 }

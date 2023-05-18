@@ -11,7 +11,8 @@ import java.util.List;
 public interface IUserService {
     User registerUser(User user) throws UserAlreadyExistException;
     User userDetails(String userName) throws UserNotFoundException;
-    boolean addProjectList(String userName,String projectName) throws UserNotFoundException;
+    boolean addProjectList(String userName,String projectName) throws UserNotFoundException, ProjectNotFoundException;
     boolean removeProjectList(String userName,String projectName) throws UserNotFoundException, ProjectNotFoundException;
     List<String> getProjectList(String userName) throws UserNotFoundException;
+
 }
