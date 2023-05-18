@@ -1,5 +1,6 @@
 package com.kanban.kanban.services;
 
+import com.kanban.kanban.config.NotificationDTO;
 import com.kanban.kanban.domain.EmployeeDTO;
 import com.kanban.kanban.domain.User;
 import com.kanban.kanban.exception.ProjectNotFoundException;
@@ -7,6 +8,9 @@ import com.kanban.kanban.exception.UserAlreadyExistException;
 import com.kanban.kanban.exception.UserNotFoundException;
 import com.kanban.kanban.proxy.UserProxy;
 import com.kanban.kanban.repository.IUserRepository;
+import org.json.simple.JSONObject;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,14 +19,18 @@ import java.util.List;
 @Service
 public class UserService implements IUserService {
 
-    IUserRepository userRepository;
+    private IUserRepository userRepository;
 
-    UserProxy userProxy;
+    private UserProxy userProxy;
+    private RabbitTemplate rabbitTemplate;
+    private DirectExchange directExchange;
 
     @Autowired
-    public UserService(UserProxy userProxy, IUserRepository iUserRepository) {
+    public UserService(IUserRepository userRepository, UserProxy userProxy, RabbitTemplate rabbitTemplate, DirectExchange directExchange) {
+        this.userRepository = userRepository;
         this.userProxy = userProxy;
-        this.userRepository = iUserRepository;
+        this.rabbitTemplate = rabbitTemplate;
+        this.directExchange = directExchange;
     }
 
     @Override
@@ -54,6 +62,12 @@ public class UserService implements IUserService {
             List<String> list = user.getProjectList();
             list.add(projectName);
             user.setProjectList(list);
+            String message = "Created "+projectName;
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("Notification",message);
+            jsonObject.put("username",userName);
+            NotificationDTO notificationDTO = new NotificationDTO(jsonObject);
+            rabbitTemplate.convertAndSend(directExchange.getName(),"user-routing",notificationDTO);
             userRepository.save(user);
             return true;
         }

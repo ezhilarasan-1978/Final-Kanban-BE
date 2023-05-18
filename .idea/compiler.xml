@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="EurekaServer" />
+        <module name="notification" />
         <module name="APIGateway" />
         <module name="FinalProject" />
         <module name="kanban" />
@@ -20,6 +21,7 @@
       <module name="EurekaServer" options="-parameters" />
       <module name="FinalProject" options="-parameters" />
       <module name="kanban" options="-parameters" />
+      <module name="notification" options="-parameters" />
     </option>
   </component>
 </project>

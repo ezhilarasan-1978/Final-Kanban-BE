@@ -88,5 +88,6 @@
 	<module>APIGateway</module>
 	<module>Kanban</module>
 	<module>EurekaServer</module>
+	<module>notification</module>
 </modules>
 </project>

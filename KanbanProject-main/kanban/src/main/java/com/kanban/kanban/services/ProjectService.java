@@ -50,7 +50,6 @@ public class ProjectService implements IProjectService{
 
     @Override
     public Project addNewTask(String name, Task task) {
-//        Project project= getProject(name);
           Project project = projectRepository.findById(name).get();
           boolean flag=project.getColumns().get("To Be Done")
                   .stream().anyMatch(t->t.getName().equals(task.getName()));
@@ -58,7 +57,6 @@ public class ProjectService implements IProjectService{
             throw new IllegalArgumentException("Task with the same name already exists");
         }
         project.getColumns().get("To Be Done").add(task);
-
         return projectRepository.save(project);
     }
 }
