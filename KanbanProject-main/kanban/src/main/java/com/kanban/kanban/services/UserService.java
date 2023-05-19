@@ -26,14 +26,15 @@ public class UserService implements IUserService {
     private RabbitTemplate rabbitTemplate;
     private DirectExchange directExchange;
 
-    ProjectProxy projectProxy;
+    private ProjectProxy projectProxy;
 
     @Autowired
-    public UserService(IUserRepository userRepository, UserProxy userProxy, RabbitTemplate rabbitTemplate, DirectExchange directExchange) {
+    public UserService(IUserRepository userRepository, UserProxy userProxy, RabbitTemplate rabbitTemplate, DirectExchange directExchange, ProjectProxy projectProxy) {
         this.userRepository = userRepository;
         this.userProxy = userProxy;
         this.rabbitTemplate = rabbitTemplate;
         this.directExchange = directExchange;
+        this.projectProxy = projectProxy;
     }
 
     @Override
@@ -41,6 +42,13 @@ public class UserService implements IUserService {
         if (userRepository.findById(user.getName()).isEmpty()) {
             EmployeeDTO employeeDTO = new EmployeeDTO(user.getName(), user.getPassword());
             userProxy.addNewUser(employeeDTO);
+            userRepository.insert(user);
+            String message = "Welcome "+user.getName();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("Notification",message);
+            jsonObject.put("username",user.getName());
+            NotificationDTO notificationDTO = new NotificationDTO(jsonObject);
+            rabbitTemplate.convertAndSend(directExchange.getName(),"user-routing",notificationDTO);
             return userRepository.insert(user);
         } else {
             throw new UserAlreadyExistException();
