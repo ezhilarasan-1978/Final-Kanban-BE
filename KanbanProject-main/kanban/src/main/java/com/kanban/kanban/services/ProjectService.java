@@ -1,10 +1,14 @@
 package com.kanban.kanban.services;
 
+import com.kanban.kanban.config.NotificationDTO;
 import com.kanban.kanban.domain.Project;
 import com.kanban.kanban.domain.Task;
 import com.kanban.kanban.exception.DuplicateProjectException;
 import com.kanban.kanban.exception.ProjectNotFoundException;
 import com.kanban.kanban.repository.IProjectRepository;
+import org.json.simple.JSONObject;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +18,16 @@ import java.util.Optional;
 
 @Service
 public class ProjectService implements IProjectService {
+
+    private IProjectRepository projectRepository;
+    private RabbitTemplate rabbitTemplate;
+    private DirectExchange directExchange;
     @Autowired
-    IProjectRepository projectRepository;
+    public ProjectService(IProjectRepository projectRepository, RabbitTemplate rabbitTemplate, DirectExchange directExchange) {
+        this.projectRepository = projectRepository;
+        this.rabbitTemplate = rabbitTemplate;
+        this.directExchange = directExchange;
+    }
 
     @Override
     public Project createProject(Project project) throws DuplicateProjectException {
@@ -58,6 +70,14 @@ public class ProjectService implements IProjectService {
                 .stream().anyMatch(t -> t.getName().equals(task.getName()));
         if (flag) {
             throw new IllegalArgumentException("Task with the same name already exists");
+        }
+        for(String obj:task.getMembers() ) {
+            String message = "Added to task : "+task.getName();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("Notification", message);
+            jsonObject.put("username", obj);
+            NotificationDTO notificationDTO = new NotificationDTO(jsonObject);
+            rabbitTemplate.convertAndSend(directExchange.getName(), "user-routing", notificationDTO);
         }
         project.getColumns().get("To Be Done").add(task);
         return projectRepository.save(project);
