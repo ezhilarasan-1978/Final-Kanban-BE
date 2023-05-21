@@ -17,7 +17,6 @@ public class Project {
     @Id
     private String name;
     private List<String> members;
-
     private Map<String,List<Task>> columns;
 
 }

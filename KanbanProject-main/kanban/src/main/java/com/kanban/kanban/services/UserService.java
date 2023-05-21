@@ -21,11 +21,9 @@ import java.util.List;
 public class UserService implements IUserService {
 
     private IUserRepository userRepository;
-
     private UserProxy userProxy;
     private RabbitTemplate rabbitTemplate;
     private DirectExchange directExchange;
-
     private ProjectProxy projectProxy;
 
     @Autowired
