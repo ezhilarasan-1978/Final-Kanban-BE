@@ -40,7 +40,7 @@ public class UserService implements IUserService {
         if (userRepository.findById(user.getName()).isEmpty()) {
             EmployeeDTO employeeDTO = new EmployeeDTO(user.getName(), user.getPassword());
             userProxy.addNewUser(employeeDTO);
-            userRepository.insert(user);
+
             String message = "Welcome "+user.getName();
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("Notification",message);
