@@ -90,10 +90,28 @@ public class ProjectService implements IProjectService {
             Project project = optionalProject.get();
             List<String> listMembers = project.getMembers();
             if (listMembers.contains(userName)) {
+
+                String message = "Project Deleted: " + userName;
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("Notification", message);
+                jsonObject.put("username", userName);
+                NotificationDTO notificationDTO = new NotificationDTO(jsonObject);
+                rabbitTemplate.convertAndSend(directExchange.getName(), "user-routing", notificationDTO);
+
+
                 listMembers.removeIf(member -> member.equals(userName));
                 if (listMembers.isEmpty()) {
                     deleteProject(projectName);
                 } else {
+                    for (String member : listMembers) {
+
+                        String message1 = "Project Member Removed: " + userName;
+                        JSONObject jsonObject1 = new JSONObject();
+                        jsonObject1.put("Notification", message1);
+                        jsonObject1.put("username", member);
+                        NotificationDTO notificationDTO1 = new NotificationDTO(jsonObject1);
+                        rabbitTemplate.convertAndSend(directExchange.getName(), "user-routing", notificationDTO1);
+                    }
                     project.setMembers(listMembers);
                     projectRepository.save(project);
                 }
@@ -104,3 +122,4 @@ public class ProjectService implements IProjectService {
     }
 
 }
+
