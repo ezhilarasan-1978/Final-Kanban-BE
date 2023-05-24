@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class NotificationConfig {
     @Bean
-    Jackson2JsonMessageConverter jsonMessageConverter(){
+    Jackson2JsonMessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
     }
 }

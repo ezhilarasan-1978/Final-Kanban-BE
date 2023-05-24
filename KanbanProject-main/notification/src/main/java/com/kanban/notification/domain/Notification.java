@@ -17,6 +17,6 @@ import java.util.*;
 public class Notification {
     @Id
     private String username;
-    private Map<String,Boolean> notificationMessage;
+    private Map<String, Boolean> notificationMessage;
     private JSONObject jsonObject;
 }
