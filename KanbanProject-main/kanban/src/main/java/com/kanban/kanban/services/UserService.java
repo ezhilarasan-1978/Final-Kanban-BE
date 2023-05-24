@@ -1,6 +1,6 @@
 package com.kanban.kanban.services;
 
-import com.kanban.kanban.config.NotificationDTO;
+import com.kanban.kanban.domain.NotificationDTO;
 import com.kanban.kanban.domain.EmployeeDTO;
 import com.kanban.kanban.domain.User;
 import com.kanban.kanban.exception.ProjectNotFoundException;
@@ -41,12 +41,12 @@ public class UserService implements IUserService {
             EmployeeDTO employeeDTO = new EmployeeDTO(user.getName(), user.getPassword());
             userProxy.addNewUser(employeeDTO);
 
-            String message = "Welcome "+user.getName();
+            String message = "Welcome " + user.getName();
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("Notification",message);
-            jsonObject.put("username",user.getName());
+            jsonObject.put("Notification", message);
+            jsonObject.put("username", user.getName());
             NotificationDTO notificationDTO = new NotificationDTO(jsonObject);
-            rabbitTemplate.convertAndSend(directExchange.getName(),"user-routing",notificationDTO);
+            rabbitTemplate.convertAndSend(directExchange.getName(), "user-routing", notificationDTO);
             return userRepository.insert(user);
         } else {
             throw new UserAlreadyExistException();
@@ -71,12 +71,12 @@ public class UserService implements IUserService {
             List<String> list = user.getProjectList();
             list.add(projectName);
             user.setProjectList(list);
-            String message = "Created "+projectName;
+            String message = "Created " + projectName;
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("Notification",message);
-            jsonObject.put("username",userName);
+            jsonObject.put("Notification", message);
+            jsonObject.put("username", userName);
             NotificationDTO notificationDTO = new NotificationDTO(jsonObject);
-            rabbitTemplate.convertAndSend(directExchange.getName(),"user-routing",notificationDTO);
+            rabbitTemplate.convertAndSend(directExchange.getName(), "user-routing", notificationDTO);
             userRepository.save(user);
             return true;
         }
@@ -92,11 +92,10 @@ public class UserService implements IUserService {
         if (!projectList.contains(projectName)) {
             throw new ProjectNotFoundException();
         } else {
-            projectProxy.deleteMemberOfProject(projectName,userName);
+            projectProxy.deleteMemberOfProject(projectName, userName);
             List<String> list = user_.getProjectList();
             list.remove(projectName);
             user_.setProjectList(list);
-
             userRepository.save(user_);
             return true;
         }

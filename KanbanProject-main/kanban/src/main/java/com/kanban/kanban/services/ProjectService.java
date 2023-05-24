@@ -1,6 +1,6 @@
 package com.kanban.kanban.services;
 
-import com.kanban.kanban.config.NotificationDTO;
+import com.kanban.kanban.domain.NotificationDTO;
 import com.kanban.kanban.domain.Project;
 import com.kanban.kanban.domain.Task;
 import com.kanban.kanban.exception.DuplicateProjectException;
@@ -18,10 +18,10 @@ import java.util.Optional;
 
 @Service
 public class ProjectService implements IProjectService {
-
     private IProjectRepository projectRepository;
     private RabbitTemplate rabbitTemplate;
     private DirectExchange directExchange;
+
     @Autowired
     public ProjectService(IProjectRepository projectRepository, RabbitTemplate rabbitTemplate, DirectExchange directExchange) {
         this.projectRepository = projectRepository;
@@ -63,7 +63,6 @@ public class ProjectService implements IProjectService {
 
     @Override
     public Project addNewTask(String name, Task task) {
-        System.out.println("this is the delete task method ");
 
         Project project = projectRepository.findById(name).get();
         boolean flag = project.getColumns().get("To Be Done")
@@ -71,8 +70,8 @@ public class ProjectService implements IProjectService {
         if (flag) {
             throw new IllegalArgumentException("Task with the same name already exists");
         }
-        for(String obj:task.getMembers() ) {
-            String message = "Added to task : "+task.getName();
+        for (String obj : task.getMembers()) {
+            String message = "Added to task : " + task.getName();
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("Notification", message);
             jsonObject.put("username", obj);
@@ -90,7 +89,6 @@ public class ProjectService implements IProjectService {
             Project project = optionalProject.get();
             List<String> listMembers = project.getMembers();
             if (listMembers.contains(userName)) {
-
                 String message = "Project Deleted: " + userName;
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("Notification", message);
@@ -98,13 +96,11 @@ public class ProjectService implements IProjectService {
                 NotificationDTO notificationDTO = new NotificationDTO(jsonObject);
                 rabbitTemplate.convertAndSend(directExchange.getName(), "user-routing", notificationDTO);
 
-
                 listMembers.removeIf(member -> member.equals(userName));
                 if (listMembers.isEmpty()) {
                     deleteProject(projectName);
                 } else {
                     for (String member : listMembers) {
-
                         String message1 = "Project Member Removed: " + userName;
                         JSONObject jsonObject1 = new JSONObject();
                         jsonObject1.put("Notification", message1);

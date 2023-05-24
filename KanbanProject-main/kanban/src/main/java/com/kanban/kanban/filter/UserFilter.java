@@ -23,12 +23,10 @@ public class UserFilter extends GenericFilterBean {
             throw new ServletException("Token is Missing");
         } else {
             String token = authHeader.substring(7);
-
             Claims claims = Jwts.parser().setSigningKey("PROJECTEzhilMahekPriyanshu").parseClaimsJws(token).getBody();
             System.out.println("Retrieved Claims :" + claims);
             httpServletRequest.setAttribute("attr1", claims.get("userName"));
         }
-
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 }

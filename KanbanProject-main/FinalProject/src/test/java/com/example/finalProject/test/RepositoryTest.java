@@ -1,8 +1,7 @@
-package com.example.FinalProject.test;
+package com.example.finalProject.test;
 
-import com.example.FinalProject.Domain.Employee;
-import com.example.FinalProject.Repository.EmployeeRepository;
-import com.netflix.discovery.converters.Auto;
+import com.example.finalProject.domain.Employee;
+import com.example.finalProject.repository.EmployeeRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,20 +23,22 @@ public class RepositoryTest {
     private Employee employee;
 
     @BeforeEach
-    public void setUp(){
-        employee= new Employee("Priyanshu", "12345678");
+    public void setUp() {
+        employee = new Employee("Priyanshu", "12345678");
     }
+
     @AfterEach
-    public void tearDown(){
-        employee=null;
+    public void tearDown() {
+        employee = null;
     }
 
     @Test
-    public void testAddSuccess(){
+    public void testAddSuccess() {
         Assertions.assertEquals(employeeRepository.save(employee), employee);
     }
+
     @Test
-    public void testFindByNameAndPassword(){
+    public void testFindByNameAndPassword() {
         employeeRepository.save(employee);
         Assertions.assertEquals(employee, employeeRepository.findByUserNameAndPassword(employee.getUserName(), employee.getPassword()));
 

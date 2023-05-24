@@ -1,11 +1,10 @@
-package com.example.FinalProject.test;
+package com.example.finalProject.test;
 
-import com.example.FinalProject.Domain.Employee;
-import com.example.FinalProject.Exception.EmployeeAlreadyExistException;
-import com.example.FinalProject.Exception.EmployeeNotFoundException;
-import com.example.FinalProject.Repository.EmployeeRepository;
-import com.example.FinalProject.Services.IEmployeeServices;
-import com.example.FinalProject.Services.IEmployeeServicesImp;
+import com.example.finalProject.domain.Employee;
+import com.example.finalProject.exception.EmployeeAlreadyExistException;
+import com.example.finalProject.exception.EmployeeNotFoundException;
+import com.example.finalProject.repository.EmployeeRepository;
+import com.example.finalProject.services.IEmployeeServicesImp;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.util.AssertionErrors.assertEquals;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
