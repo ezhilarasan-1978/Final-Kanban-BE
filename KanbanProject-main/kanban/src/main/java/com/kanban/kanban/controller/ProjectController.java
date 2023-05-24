@@ -23,24 +23,29 @@ public class ProjectController {
     public ResponseEntity<?> addProject(@RequestBody Project project) throws DuplicateProjectException {
         return new ResponseEntity<>(projectService.createProject(project), HttpStatus.CREATED);
     }
+
     @GetMapping("/{name}")
     public ResponseEntity<?> getProject(@PathVariable String name) throws ProjectNotFoundException {
         return new ResponseEntity<>(projectService.getProject(name), HttpStatus.OK);
     }
+
     @PutMapping("/save/{name}")
-    public ResponseEntity<?> updateProject(@PathVariable String name,@RequestBody Map<String, List<Task>> columns) throws ProjectNotFoundException {
-        return new ResponseEntity<>(projectService.saveChanges(name,columns),HttpStatus.OK);
+    public ResponseEntity<?> updateProject(@PathVariable String name, @RequestBody Map<String, List<Task>> columns) throws ProjectNotFoundException {
+        return new ResponseEntity<>(projectService.saveChanges(name, columns), HttpStatus.OK);
     }
+
     @DeleteMapping("/delete/{name}")
     public ResponseEntity<?> deleteProject(@PathVariable String name) throws ProjectNotFoundException {
-        return new ResponseEntity<>(projectService.deleteProject(name),HttpStatus.OK);
+        return new ResponseEntity<>(projectService.deleteProject(name), HttpStatus.OK);
     }
+
     @PutMapping("/task/{name}")
-    public ResponseEntity<?> addnewTask(@PathVariable String name, @RequestBody Task task){
+    public ResponseEntity<?> addnewTask(@PathVariable String name, @RequestBody Task task) {
         return new ResponseEntity<>(projectService.addNewTask(name, task), HttpStatus.OK);
     }
+
     @GetMapping("/deleteMember/{projectName}/{userName}")
-    public ResponseEntity<?> deleteMemberOfProject(@PathVariable String projectName,@PathVariable String userName) throws ProjectNotFoundException {
+    public ResponseEntity<?> deleteMemberOfProject(@PathVariable String projectName, @PathVariable String userName) throws ProjectNotFoundException {
 
         return new ResponseEntity<>(projectService.deleteMemeberFromProject(projectName, userName), HttpStatus.OK);
     }

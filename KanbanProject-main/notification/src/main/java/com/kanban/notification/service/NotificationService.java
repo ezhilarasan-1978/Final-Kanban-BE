@@ -11,9 +11,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class NotificationService implements INotificationService{
+public class NotificationService implements INotificationService {
     @Autowired
     INotificationRepository notificationRepository;
+
     @Override
     public Notification getNotification(String username) {
         return notificationRepository.findById(username).get();
@@ -22,19 +23,19 @@ public class NotificationService implements INotificationService{
     @RabbitListener(queues = "user-notification-queue")
     @Override
     public void saveNotification(NotificationDTO notificationDTO) {
-        String name=notificationDTO.getJsonObject().get("username").toString();
-        if(notificationRepository.findById(name).isEmpty()){
-        Notification notification = new Notification();
-        Map<String,Boolean> messages = new HashMap();
-        messages.put(notificationDTO.getJsonObject().get("Notification").toString(),false);
-        notification.setNotificationMessage(messages);
-        notification.setJsonObject(notificationDTO.getJsonObject());
-        notification.setUsername(name);
-        notificationRepository.save(notification);
+        String name = notificationDTO.getJsonObject().get("username").toString();
+        if (notificationRepository.findById(name).isEmpty()) {
+            Notification notification = new Notification();
+            Map<String, Boolean> messages = new HashMap();
+            messages.put(notificationDTO.getJsonObject().get("Notification").toString(), false);
+            notification.setNotificationMessage(messages);
+            notification.setJsonObject(notificationDTO.getJsonObject());
+            notification.setUsername(name);
+            notificationRepository.save(notification);
         }
-        Notification notification=notificationRepository.findById(name).get();
-        Map<String,Boolean> messages = notification.getNotificationMessage();
-        messages.put(notificationDTO.getJsonObject().get("Notification").toString(),false);
+        Notification notification = notificationRepository.findById(name).get();
+        Map<String, Boolean> messages = notification.getNotificationMessage();
+        messages.put(notificationDTO.getJsonObject().get("Notification").toString(), false);
         notification.setNotificationMessage(messages);
         notificationRepository.save(notification);
 
@@ -42,8 +43,8 @@ public class NotificationService implements INotificationService{
 
     @Override
     public boolean markAllRead(String username) {
-        Notification notification=notificationRepository.findById(username).get();
-        Map<String,Boolean> messages=notification.getNotificationMessage();
+        Notification notification = notificationRepository.findById(username).get();
+        Map<String, Boolean> messages = notification.getNotificationMessage();
         messages.replaceAll((s, v) -> true);
         notification.setNotificationMessage(messages);
         notificationRepository.save(notification);
@@ -52,10 +53,10 @@ public class NotificationService implements INotificationService{
 
     @Override
     public boolean markRead(String username, String message) {
-        Notification notification=notificationRepository.findById(username).get();
-        Map<String,Boolean> messages=notification.getNotificationMessage();
-        if(messages.containsKey(message)){
-            messages.put(message,true);
+        Notification notification = notificationRepository.findById(username).get();
+        Map<String, Boolean> messages = notification.getNotificationMessage();
+        if (messages.containsKey(message)) {
+            messages.put(message, true);
         }
         notification.setNotificationMessage(messages);
         notificationRepository.save(notification);
