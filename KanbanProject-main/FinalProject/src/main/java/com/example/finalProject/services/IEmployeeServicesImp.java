@@ -1,9 +1,9 @@
-package com.example.FinalProject.Services;
+package com.example.finalProject.services;
 
-import com.example.FinalProject.Domain.Employee;
-import com.example.FinalProject.Exception.EmployeeAlreadyExistException;
-import com.example.FinalProject.Exception.EmployeeNotFoundException;
-import com.example.FinalProject.Repository.EmployeeRepository;
+import com.example.finalProject.domain.Employee;
+import com.example.finalProject.exception.EmployeeAlreadyExistException;
+import com.example.finalProject.exception.EmployeeNotFoundException;
+import com.example.finalProject.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +17,8 @@ public class IEmployeeServicesImp implements IEmployeeServices {
     public Employee addEmployee(Employee employee) throws EmployeeAlreadyExistException {
         if (employeeRepository.findById(employee.getUserName()).isEmpty()) {
             return employeeRepository.save(employee);
-        }
-        else{
+        } else {
             throw new EmployeeAlreadyExistException();
-
         }
     }
 
