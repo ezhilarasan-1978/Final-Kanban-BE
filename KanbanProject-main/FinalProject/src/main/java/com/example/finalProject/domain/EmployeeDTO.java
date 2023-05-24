@@ -1,18 +1,15 @@
-package com.example.FinalProject.Domain;
+package com.example.finalProject.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity
-public class Employee {
-    @Id
+@ToString
+public class EmployeeDTO {
     private String userName;
     private String password;
 }

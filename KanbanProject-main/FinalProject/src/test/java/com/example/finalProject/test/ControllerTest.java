@@ -1,12 +1,12 @@
-package com.example.FinalProject.test;
+package com.example.finalProject.test;
 
-import com.example.FinalProject.Controller.EmployeeController;
-import com.example.FinalProject.Domain.Employee;
-import com.example.FinalProject.Domain.EmployeeDTO;
-import com.example.FinalProject.Exception.EmployeeAlreadyExistException;
-import com.example.FinalProject.Exception.EmployeeNotFoundException;
-import com.example.FinalProject.Services.IEmployeeServices;
-import com.example.FinalProject.Services.ISecurityTokenGenerator;
+import com.example.finalProject.controller.EmployeeController;
+import com.example.finalProject.domain.Employee;
+import com.example.finalProject.domain.EmployeeDTO;
+import com.example.finalProject.exception.EmployeeAlreadyExistException;
+import com.example.finalProject.exception.EmployeeNotFoundException;
+import com.example.finalProject.services.IEmployeeServices;
+import com.example.finalProject.services.ISecurityTokenGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

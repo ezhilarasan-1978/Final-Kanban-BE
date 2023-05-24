@@ -1,6 +1,6 @@
-package com.example.FinalProject.Repository;
+package com.example.finalProject.repository;
 
-import com.example.FinalProject.Domain.Employee;
+import com.example.finalProject.domain.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,18 +1,17 @@
-package com.example.FinalProject.Controller;
+package com.example.finalProject.controller;
 
-import com.example.FinalProject.Domain.Employee;
-import com.example.FinalProject.Domain.EmployeeDTO;
-import com.example.FinalProject.Exception.EmployeeAlreadyExistException;
-import com.example.FinalProject.Exception.EmployeeNotFoundException;
-import com.example.FinalProject.Services.IEmployeeServices;
-import com.example.FinalProject.Services.ISecurityTokenGenerator;
+import com.example.finalProject.domain.Employee;
+import com.example.finalProject.domain.EmployeeDTO;
+import com.example.finalProject.exception.EmployeeAlreadyExistException;
+import com.example.finalProject.exception.EmployeeNotFoundException;
+import com.example.finalProject.services.IEmployeeServices;
+import com.example.finalProject.services.ISecurityTokenGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-//@CrossOrigin
 @RequestMapping("api/v1/auth")
 public class EmployeeController {
     @Autowired
@@ -27,17 +26,6 @@ public class EmployeeController {
         return new ResponseEntity<>(iEmployeeServices.addEmployee(employee), HttpStatus.OK);
     }
 
-    //    http://localhost:3033/api/v1/auth/login
-//    @PostMapping("/login")
-//    public ResponseEntity<?> loginCustomer(@RequestBody Employee employee) throws EmployeeNotFoundException {
-//        Employee fetchedCustomer = iEmployeeServices.getEmployee(employee);
-//
-//        if(fetchedCustomer!=null){
-//            return new ResponseEntity<>(iSecurityTokenGenerator.generateToken(fetchedCustomer), HttpStatus.OK);
-//        }else{
-//            return new ResponseEntity<>("The Authentication was failed", HttpStatus.EXPECTATION_FAILED);
-//        }
-//    }
     @PostMapping("/login")
     public ResponseEntity<?> loginCustomer(@RequestBody Employee employee) throws EmployeeNotFoundException {
         try {
@@ -51,7 +39,6 @@ public class EmployeeController {
             return new ResponseEntity<>("The Authentication was failed", HttpStatus.NOT_FOUND);
         }
     }
-
 
     @GetMapping("/findUser/{name}")
     public ResponseEntity<?> getEmployeeByName(@PathVariable String name) {
