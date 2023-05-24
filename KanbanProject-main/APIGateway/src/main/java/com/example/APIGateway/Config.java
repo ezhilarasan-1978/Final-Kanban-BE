@@ -17,6 +17,8 @@ public class Config {
                         .uri("http://localhost:8007/"))
                 .route(p->p.path("/api/v1/user/**")
                         .uri("http://localhost:8007/"))
+                .route(p->p.path("/api/v1/notifications/**")
+                        .uri("http://localhost:8090/"))
                 .build();
     }
 }

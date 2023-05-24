@@ -29,20 +29,20 @@ public class KanbanApplication {
 			filterRegistrationBean.addUrlPatterns("/api/v1/user/details","/api/v1/user/addProject/*","/api/v1/user/removeProject/*","/api/v1/user/projectList");
 			return filterRegistrationBean;
 	}
-	@Bean
-	public FilterRegistrationBean filterRegistrationBean(){
-		final CorsConfiguration config = new CorsConfiguration();
-		config.setAllowCredentials(true);
-		config.addAllowedOrigin("http://localhost:4200");
-		config.addAllowedHeader("*");
-		config.addAllowedMethod("*");
-		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**",config);
-		FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
-		bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
-
-		return bean;
-	}
+//	@Bean
+//	public FilterRegistrationBean filterRegistrationBean(){
+//		final CorsConfiguration config = new CorsConfiguration();
+//		config.setAllowCredentials(true);
+//		config.addAllowedOrigin("http://localhost:4200");
+//		config.addAllowedHeader("*");
+//		config.addAllowedMethod("*");
+//		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//		source.registerCorsConfiguration("/**",config);
+//		FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
+//		bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+//
+//		return bean;
+//	}
 
 
 }
