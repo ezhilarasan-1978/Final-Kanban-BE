@@ -20,4 +20,8 @@ public interface IProjectService {
     Project addNewTask(String name, Task task);
 
     boolean deleteMemeberFromProject(String projectName, String userName) throws ProjectNotFoundException;
+
+    Project editProject(String name, Project project) throws ProjectNotFoundException;
+
+
 }

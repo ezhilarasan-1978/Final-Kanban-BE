@@ -117,5 +117,15 @@ public class ProjectService implements IProjectService {
         throw new ProjectNotFoundException();
     }
 
+    @Override
+    public Project editProject(String name, Project project1) throws ProjectNotFoundException {
+        if(projectRepository.findById(name).isEmpty()) {
+            throw new ProjectNotFoundException();
+        }
+        Project project= projectRepository.findById(name).get();
+        project.setMembers(project1.getMembers());
+        return projectRepository.save(project);
+    }
+
 }
 

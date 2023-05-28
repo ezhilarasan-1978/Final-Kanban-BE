@@ -54,4 +54,9 @@ public class UserController {
         String username = (String) httpServletRequest.getAttribute("attr1");
         return new ResponseEntity<>(userService.getProjectList(username), HttpStatus.OK);
     }
+
+    @GetMapping("/removeProjectFromMember/{projectName}/{name}")
+    public ResponseEntity<?> removeProjectOfUser(@PathVariable String projectName,@PathVariable String name) throws UserNotFoundException, ProjectNotFoundException {
+         return new ResponseEntity<>(userService.removeProjectList(name, projectName), HttpStatus.OK);
+    }
 }

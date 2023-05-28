@@ -15,6 +15,8 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Service
@@ -40,7 +42,6 @@ public class UserService implements IUserService {
         if (userRepository.findById(user.getName()).isEmpty()) {
             EmployeeDTO employeeDTO = new EmployeeDTO(user.getName(), user.getPassword());
             userProxy.addNewUser(employeeDTO);
-
             String message = "Welcome " + user.getName();
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("Notification", message);
@@ -69,16 +70,20 @@ public class UserService implements IUserService {
         } else {
             User user = userRepository.findById(userName).get();
             List<String> list = user.getProjectList();
-            list.add(projectName);
-            user.setProjectList(list);
-            String message = "Created " + projectName;
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("Notification", message);
-            jsonObject.put("username", userName);
-            NotificationDTO notificationDTO = new NotificationDTO(jsonObject);
-            rabbitTemplate.convertAndSend(directExchange.getName(), "user-routing", notificationDTO);
-            userRepository.save(user);
-            return true;
+            if(!list.contains(projectName)){
+                list.add(projectName);
+                user.setProjectList(list);
+                String message = "Created " + projectName;
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("Notification", message);
+                jsonObject.put("username", userName);
+                NotificationDTO notificationDTO = new NotificationDTO(jsonObject);
+                rabbitTemplate.convertAndSend(directExchange.getName(), "user-routing", notificationDTO);
+                userRepository.save(user);
+                return true;
+            }
+
+            return false;
         }
     }
 
@@ -92,6 +97,7 @@ public class UserService implements IUserService {
         if (!projectList.contains(projectName)) {
             throw new ProjectNotFoundException();
         } else {
+
             projectProxy.deleteMemberOfProject(projectName, userName);
             List<String> list = user_.getProjectList();
             list.remove(projectName);

@@ -49,4 +49,9 @@ public class ProjectController {
 
         return new ResponseEntity<>(projectService.deleteMemeberFromProject(projectName, userName), HttpStatus.OK);
     }
+
+    @PutMapping("/editProject/{name}")
+    public ResponseEntity<?> editProject(@PathVariable String name, @RequestBody Project project) throws ProjectNotFoundException {
+        return new ResponseEntity(projectService.editProject(name, project), HttpStatus.OK);
+    }
 }
