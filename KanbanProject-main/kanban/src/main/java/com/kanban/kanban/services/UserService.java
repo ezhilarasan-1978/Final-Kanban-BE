@@ -6,6 +6,7 @@ import com.kanban.kanban.domain.User;
 import com.kanban.kanban.exception.ProjectNotFoundException;
 import com.kanban.kanban.exception.UserAlreadyExistException;
 import com.kanban.kanban.exception.UserNotFoundException;
+import com.kanban.kanban.proxy.NotificationProxy;
 import com.kanban.kanban.proxy.ProjectProxy;
 import com.kanban.kanban.proxy.UserProxy;
 import com.kanban.kanban.repository.IUserRepository;
@@ -25,14 +26,16 @@ public class UserService implements IUserService {
     private RabbitTemplate rabbitTemplate;
     private DirectExchange directExchange;
     private ProjectProxy projectProxy;
+    private NotificationProxy notificationProxy;
 
     @Autowired
-    public UserService(IUserRepository userRepository, UserProxy userProxy, RabbitTemplate rabbitTemplate, DirectExchange directExchange, ProjectProxy projectProxy) {
+    public UserService(IUserRepository userRepository, UserProxy userProxy, RabbitTemplate rabbitTemplate, DirectExchange directExchange, ProjectProxy projectProxy, NotificationProxy notificationProxy) {
         this.userRepository = userRepository;
         this.userProxy = userProxy;
         this.rabbitTemplate = rabbitTemplate;
         this.directExchange = directExchange;
         this.projectProxy = projectProxy;
+        this.notificationProxy = notificationProxy;
     }
 
     @Override
@@ -40,7 +43,8 @@ public class UserService implements IUserService {
         if (userRepository.findById(user.getName()).isEmpty()) {
             EmployeeDTO employeeDTO = new EmployeeDTO(user.getName(), user.getPassword());
             userProxy.addNewUser(employeeDTO);
-
+            System.out.println(user);
+            notificationProxy.sendRegistrationEmail(user.getEmail());
             String message = "Welcome " + user.getName();
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("Notification", message);
