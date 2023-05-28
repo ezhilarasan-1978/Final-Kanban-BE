@@ -6,6 +6,7 @@ import com.kanban.kanban.domain.User;
 import com.kanban.kanban.exception.ProjectNotFoundException;
 import com.kanban.kanban.exception.UserAlreadyExistException;
 import com.kanban.kanban.exception.UserNotFoundException;
+import com.kanban.kanban.proxy.NotificationProxy;
 import com.kanban.kanban.proxy.ProjectProxy;
 import com.kanban.kanban.proxy.UserProxy;
 import com.kanban.kanban.repository.IUserRepository;
@@ -15,8 +16,6 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Service
@@ -27,14 +26,16 @@ public class UserService implements IUserService {
     private RabbitTemplate rabbitTemplate;
     private DirectExchange directExchange;
     private ProjectProxy projectProxy;
+    private NotificationProxy notificationProxy;
 
     @Autowired
-    public UserService(IUserRepository userRepository, UserProxy userProxy, RabbitTemplate rabbitTemplate, DirectExchange directExchange, ProjectProxy projectProxy) {
+    public UserService(IUserRepository userRepository, UserProxy userProxy, RabbitTemplate rabbitTemplate, DirectExchange directExchange, ProjectProxy projectProxy, NotificationProxy notificationProxy) {
         this.userRepository = userRepository;
         this.userProxy = userProxy;
         this.rabbitTemplate = rabbitTemplate;
         this.directExchange = directExchange;
         this.projectProxy = projectProxy;
+        this.notificationProxy = notificationProxy;
     }
 
     @Override
@@ -42,6 +43,8 @@ public class UserService implements IUserService {
         if (userRepository.findById(user.getName()).isEmpty()) {
             EmployeeDTO employeeDTO = new EmployeeDTO(user.getName(), user.getPassword());
             userProxy.addNewUser(employeeDTO);
+            System.out.println(user);
+            notificationProxy.sendRegistrationEmail(user.getEmail());
             String message = "Welcome " + user.getName();
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("Notification", message);
@@ -70,20 +73,16 @@ public class UserService implements IUserService {
         } else {
             User user = userRepository.findById(userName).get();
             List<String> list = user.getProjectList();
-            if(!list.contains(projectName)){
-                list.add(projectName);
-                user.setProjectList(list);
-                String message = "Created " + projectName;
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("Notification", message);
-                jsonObject.put("username", userName);
-                NotificationDTO notificationDTO = new NotificationDTO(jsonObject);
-                rabbitTemplate.convertAndSend(directExchange.getName(), "user-routing", notificationDTO);
-                userRepository.save(user);
-                return true;
-            }
-
-            return false;
+            list.add(projectName);
+            user.setProjectList(list);
+            String message = "Created " + projectName;
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("Notification", message);
+            jsonObject.put("username", userName);
+            NotificationDTO notificationDTO = new NotificationDTO(jsonObject);
+            rabbitTemplate.convertAndSend(directExchange.getName(), "user-routing", notificationDTO);
+            userRepository.save(user);
+            return true;
         }
     }
 
@@ -97,7 +96,6 @@ public class UserService implements IUserService {
         if (!projectList.contains(projectName)) {
             throw new ProjectNotFoundException();
         } else {
-
             projectProxy.deleteMemberOfProject(projectName, userName);
             List<String> list = user_.getProjectList();
             list.remove(projectName);

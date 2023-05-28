@@ -22,13 +22,11 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) throws UserAlreadyExistException {
         return new ResponseEntity<>(userService.registerUser(user), HttpStatus.CREATED);
-
     }
 
     @GetMapping("/details")
     public ResponseEntity<?> userDetails(HttpServletRequest httpServletRequest) throws UserNotFoundException {
         String username = (String) httpServletRequest.getAttribute("attr1");
-        System.out.println(username);
         return new ResponseEntity<>(userService.userDetails(username), HttpStatus.OK);
     }
 
