@@ -97,7 +97,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void addProjectListSuccess() throws UserNotFoundException {
+    public void addProjectListSuccess() throws UserNotFoundException, ProjectNotFoundException {
         when(iUserRepository.findById(user.getName())).thenReturn(Optional.of(user));
         when(iUserRepository.save(user)).thenReturn(user);
         iUserService.addProjectList(user.getName(), "Project3");

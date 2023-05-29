@@ -35,22 +35,13 @@ public class NotificationController {
         return new ResponseEntity<>(notificationService.markRead(name, message), HttpStatus.OK);
     }
 
-    @PostMapping("/email")
-    public String sendRegistrationEmail(@RequestBody String email) {
+    @PostMapping("/email/{email}")
+    public String sendRegistrationEmail(@PathVariable String email, @RequestBody String message) {
+        System.out.println(message);
+        System.out.println(email);
         String subject = "Welcome to WorkFlo – Unleash Your Productivity with Kanban Boards!";
         String content = "Dear " + email + ",\n\n" +
-                "Welcome aboard to WorkFlo! We're thrilled to have you join our growing community of productivity enthusiasts." +
-                " As the creator of a dedicated platform for Kanban board management, we are committed to helping you streamline your workflow, boost collaboration, and accomplish your goals with ease.\n\n" +
-                "At WorkFlo, we understand the importance of effective project management, and our intuitive Kanban board system is designed to simplify " +
-                "the process for you. Whether you're an individual looking to organize personal tasks or a team striving for seamless teamwork, our platform offers the ideal solution.\n\n" +
-                "Once logged in, you'll be greeted by an intuitive interface where you can create boards, add and manage tasks, collaborate with team members, and monitor progress effortlessly." +
-                " Our platform is designed to adapt to your unique workflow, allowing you to customize columns, labels, and other features to align with your specific needs.\n\n" +
-                "Moreover, we constantly strive to enhance your experience with regular updates and new features. Stay tuned for upcoming enhancements that will further empower you to stay organized," +
-                " increase productivity, and achieve your objectives effectively.\n\n" +
-                "Should you encounter any questions or require assistance, our support team is always ready to help. Feel free to reach out to us at workflo.site@gmail.com, and we'll respond promptly to address your queries.\n\n" +
-                "Thank you for choosing WorkFlo as your go-to platform for Kanban board management. We're excited to have you join us on this productivity journey!\n\n" +
-                "Best regards,\n" +
-                "WorkFlo Team";
+                message;
 
         mailSender.sendEmail(email, subject, content);
         return "Email sent!";

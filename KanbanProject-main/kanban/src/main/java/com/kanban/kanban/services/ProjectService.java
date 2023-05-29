@@ -5,6 +5,7 @@ import com.kanban.kanban.domain.Project;
 import com.kanban.kanban.domain.Task;
 import com.kanban.kanban.exception.DuplicateProjectException;
 import com.kanban.kanban.exception.ProjectNotFoundException;
+import com.kanban.kanban.proxy.NotificationProxy;
 import com.kanban.kanban.repository.IProjectRepository;
 import org.json.simple.JSONObject;
 import org.springframework.amqp.core.DirectExchange;
@@ -21,12 +22,14 @@ public class ProjectService implements IProjectService {
     private IProjectRepository projectRepository;
     private RabbitTemplate rabbitTemplate;
     private DirectExchange directExchange;
+    private NotificationProxy notificationProxy;
 
     @Autowired
-    public ProjectService(IProjectRepository projectRepository, RabbitTemplate rabbitTemplate, DirectExchange directExchange) {
+    public ProjectService(NotificationProxy notificationProxy,IProjectRepository projectRepository, RabbitTemplate rabbitTemplate, DirectExchange directExchange) {
         this.projectRepository = projectRepository;
         this.rabbitTemplate = rabbitTemplate;
         this.directExchange = directExchange;
+        this.notificationProxy= notificationProxy;
     }
 
     @Override
@@ -75,6 +78,7 @@ public class ProjectService implements IProjectService {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("Notification", message);
             jsonObject.put("username", obj);
+
             NotificationDTO notificationDTO = new NotificationDTO(jsonObject);
             rabbitTemplate.convertAndSend(directExchange.getName(), "user-routing", notificationDTO);
         }
