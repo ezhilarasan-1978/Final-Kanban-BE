@@ -17,10 +17,10 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="APIGateway" options="" />
-      <module name="EurekaServer" options="" />
-      <module name="FinalProject" options="" />
-      <module name="kanban" options="" />
+      <module name="APIGateway" options="-parameters" />
+      <module name="EurekaServer" options="-parameters" />
+      <module name="FinalProject" options="-parameters" />
+      <module name="kanban" options="-parameters" />
       <module name="notification" options="-parameters" />
     </option>
   </component>

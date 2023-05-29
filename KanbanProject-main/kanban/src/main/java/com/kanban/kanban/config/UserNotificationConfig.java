@@ -39,4 +39,35 @@ public class UserNotificationConfig {
         return BindingBuilder.bind(registerQueue()).to(exchange).with("user-routing");
     }
 
+//
+//private String exchangeName="user-notification-exchange";
+//    private String queueName="user-notification-queue";
+//
+//    @Bean
+//    public DirectExchange getDirectExchange(){
+//        return new DirectExchange(exchangeName);
+//    }
+//
+//    @Bean
+//    public Queue getQueue(){
+//        return new Queue(queueName);
+//    }
+//
+//    @Bean
+//    public Jackson2JsonMessageConverter getJackson2JsonMessageConverter(){
+//        return new Jackson2JsonMessageConverter();
+//    }
+//
+//    @Bean
+//    public RabbitTemplate getRabbitTemplate(final ConnectionFactory connectionFactory){
+//        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+//        rabbitTemplate.setMessageConverter(getJackson2JsonMessageConverter());
+//        return rabbitTemplate;
+//    }
+//
+//    @Bean
+//    public Binding getBinding(){
+//        return BindingBuilder.bind(getQueue()).to(getDirectExchange()).with("user-routing");
+//    }
+
 }

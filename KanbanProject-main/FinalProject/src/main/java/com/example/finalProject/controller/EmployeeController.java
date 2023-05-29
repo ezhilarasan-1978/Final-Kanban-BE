@@ -19,12 +19,13 @@ public class EmployeeController {
     @Autowired
     private ISecurityTokenGenerator iSecurityTokenGenerator;
 
-    // http://localhost:3033/api/v1/auth/addUser
+//     http://localhost:3033/api/v1/auth/addUser
     @PostMapping("/addUser")
     public ResponseEntity<?> addNewUser(@RequestBody EmployeeDTO employeeDTO) throws EmployeeAlreadyExistException {
         Employee employee = new Employee(employeeDTO.getUserName(), employeeDTO.getPassword());
         return new ResponseEntity<>(iEmployeeServices.addEmployee(employee), HttpStatus.OK);
     }
+
 
     @PostMapping("/login")
     public ResponseEntity<?> loginCustomer(@RequestBody Employee employee) throws EmployeeNotFoundException {
